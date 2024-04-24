@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Car{% endblock %}
+
+{% block body %}
+    <h1>Car</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ car.id }}</td>
+            </tr>
+            <tr>
+                <th>Brand</th>
+                <td>{{ car.brand }}</td>
+            </tr>
+            <tr>
+                <th>Model</th>
+                <td>{{ car.model }}</td>
+            </tr>
+            <tr>
+                <th>Rental_price</th>
+                <td>{{ car.rentalPrice }}</td>
+            </tr>
+            <tr>
+                <th>Pictures</th>
+                <td>{{ car.pictures }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{ car.location }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td>{{ car.year }}</td>
+            </tr>
+            <tr>
+                <th>Type_of_gearbox</th>
+                <td>{{ car.typeOfGearbox }}</td>
+            </tr>
+            <tr>
+                <th>Fuel_type</th>
+                <td>{{ car.fuelType }}</td>
+            </tr>
+            <tr>
+                <th>Place_of_delivery</th>
+                <td>{{ car.placeOfDelivery }}</td>
+            </tr>
+            <tr>
+                <th>Place_of_reteur</th>
+                <td>{{ car.placeOfReteur }}</td>
+            </tr>
+            <tr>
+                <th>Posted_at</th>
+                <td>{{ car.postedAt ? car.postedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ car.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_car_index') }}">back to list</a>
+
+    <a href="{{ path('app_car_edit', {'id': car.id}) }}">edit</a>
+
+    {{ include('car/_delete_form.html.twig') }}
+{% endblock %}
