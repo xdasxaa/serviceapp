@@ -10,16 +10,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-#[Route('/car')]
+
+#[Route('/api/cars')]
 class CarController extends AbstractController
 {
-    #[Route('/', name: 'app_car_index', methods: ['GET'])]
-    public function index(CarRepository $carRepository): Response
+    #[Route('/', name: 'api_car_index', methods: ['GET'])]
+    public function apiIndex(CarRepository $carRepository): JsonResponse
     {
-        return $this->render('car/index.html.twig', [
-            'cars' => $carRepository->findAll(),
-        ]);
+        $cars = $carRepository->findAll();
+
+        $carsData = [];
+        foreach ($cars as $car) {
+            $carsData[] = [
+                'id' => $car->getId(),
+                'brand' => $car->getBrand(),
+                'model' => $car->getModel(),
+                'rentalPrice' => $car->getRentalPrice(),
+                'pictures' => $car->getPictures(),
+                'location' => $car->getLocation(),
+                'year' => $car->getYear(),
+                'typeOfGearbox' => $car->getTypeOfGearbox(),
+                'fuelType' => $car->getFuelType(),
+                'placeOfDelivery' => $car->getPlaceOfDelivery(),
+                'placeOfReteur' => $car->getPlaceOfReteur(),
+                'description' => $car->getDescription(),
+                'postedAt' => $car->getPostedAt()->format('Y-m-d H:i:s'), // Assuming postedAt is a DateTime object
+                // Add other fields as needed
+            ];
+        }
+
+
+        return new JsonResponse($carsData);
     }
 
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
