@@ -45,7 +45,7 @@ class CarController extends AbstractController
         return new JsonResponse($carsData);
     }
 
-    #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'api_car_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $car = new Car();
@@ -56,7 +56,7 @@ class CarController extends AbstractController
             $entityManager->persist($car);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('api_car_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/new.html.twig', [
@@ -65,7 +65,7 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_car_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_car_show', methods: ['GET'])]
     public function show(Car $car): Response
     {
         return $this->render('car/show.html.twig', [
@@ -73,7 +73,7 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_car_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'api_car_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CarType::class, $car);
@@ -82,7 +82,7 @@ class CarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('api_car_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/edit.html.twig', [
@@ -91,7 +91,7 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->getPayload()->get('_token'))) {
@@ -99,6 +99,6 @@ class CarController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('api_car_index', [], Response::HTTP_SEE_OTHER);
     }
 }

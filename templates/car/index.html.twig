@@ -41,8 +41,8 @@
                 <td>{{ car.postedAt ? car.postedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ car.description }}</td>
                 <td>
-                    <a href="{{ path('app_car_show', {'id': car.id}) }}">show</a>
-                    <a href="{{ path('app_car_edit', {'id': car.id}) }}">edit</a>
+                    <a href="{{ path('api_car_show', {'id': car.id}) }}">show</a>
+                    <a href="{{ path('api_car_edit', {'id': car.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -53,5 +53,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_car_new') }}">Create new</a>
+    <a href="{{ path('api_car_new') }}">Create new</a>
 {% endblock %}
