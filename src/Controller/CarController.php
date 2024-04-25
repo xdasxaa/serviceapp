@@ -36,8 +36,7 @@ class CarController extends AbstractController
                 'placeOfDelivery' => $car->getPlaceOfDelivery(),
                 'placeOfReteur' => $car->getPlaceOfReteur(),
                 'description' => $car->getDescription(),
-                'postedAt' => $car->getPostedAt()->format('Y-m-d H:i:s'), // Assuming postedAt is a DateTime object
-                // Add other fields as needed
+                'postedAt' => $car->getPostedAt()->format('Y-m-d H:i:s'),
             ];
         }
 
@@ -45,24 +44,21 @@ class CarController extends AbstractController
         return new JsonResponse($carsData);
     }
 
-    #[Route('/new', name: 'api_car_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'api_car_new', methods: ['POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
+
         $car = new Car();
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
+        // Populate car entity with data from request
+        $car->setBrand($data['brand']);
+        $car->setModel($data['model']);
+        // Set other fields as needed
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($car);
-            $entityManager->flush();
+        $entityManager->persist($car);
+        $entityManager->flush();
 
-            return $this->redirectToRoute('api_car_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('car/new.html.twig', [
-            'car' => $car,
-            'form' => $form,
-        ]);
+        return new JsonResponse(['message' => 'Car added successfully'], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'api_car_show', methods: ['GET'])]
