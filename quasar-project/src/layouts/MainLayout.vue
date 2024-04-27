@@ -9,49 +9,68 @@ Inject Drawer content for scrolling
 
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer"/>
         <q-toolbar-title>
-          <a href="../" style="text-decoration: none" class="text-blue-3">
+          <div @click="router.push('/')" class="cursor-pointer" style="width: fit-content">
             <q-avatar>
               <img src="../assets/logo.svg" alt="zeb"/>
             </q-avatar>
             Home
-          </a>
+          </div>
         </q-toolbar-title>
       </q-toolbar>
-
-      <q-tabs align="left">
-        <q-route-tab to="/cars" label="Cars" />
-        <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" />
-      </q-tabs>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" elevated>
+    <q-drawer v-model="leftDrawerOpen" side="left" elevated overlay :width="250">
       <!-- drawer content -->
+      <q-scroll-area class="fit">
+        <q-list>
+          <template v-for="(drawerItem, index) in drawerItems" :key="index">
+            <q-item clickable v-ripple :to="drawerItem.to" active-class="bg-info">
+              <q-item-section avatar>
+                <q-icon :name="drawerItem.icon"/>
+              </q-item-section>
+              <q-item-section>
+                {{ drawerItem.label }}
+              </q-item-section>
+            </q-item>
+            <q-separator :key="'sep'+index" v-if="drawerItem.separator"/>
+          </template>
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
 
   </q-layout>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import {ref} from 'vue'
+import {useRouter} from "vue-router";
+import {useQuasar} from "quasar";
 
-export default {
-  setup () {
-    const leftDrawerOpen = ref(false)
-
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
+const $q = useQuasar();
+const router = useRouter();
+const leftDrawerOpen = ref(false)
+const drawerItems = [
+  {
+    icon: 'directions_car',
+    label: 'Cars',
+    separator: true,
+    to: '/cars'
+  },
+  {
+    icon: 'man',
+    label: 'People',
+    separator: true,
   }
+]
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
 </script>

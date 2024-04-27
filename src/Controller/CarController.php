@@ -47,12 +47,23 @@ class CarController extends AbstractController
     #[Route('/new', name: 'api_car_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        dump($request->getContent());
         $data = json_decode($request->getContent(), true);
-
+        dump($data);
         $car = new Car();
         // Populate car entity with data from request
         $car->setBrand($data['brand']);
         $car->setModel($data['model']);
+        $car->setRentalPrice($data['rental_price']);
+        $car->setPictures($data['pictures']);
+        $car->setLocation($data['location']);
+        $car->setYear($data['year']);
+        $car->setTypeOfGearbox($data['gearbox']);
+        $car->setFuelType($data['fuel_type']);
+        $car->setPlaceOfDelivery($data['delivery_place']);
+        $car->setPlaceOfReteur($data['return_place']);
+        $car->setDescription($data['description']);
+        $car->setPostedAt(new \DateTimeImmutable());
         // Set other fields as needed
 
         $entityManager->persist($car);
@@ -87,14 +98,12 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'api_car_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_car_delete', methods: ['DELETE'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->getPayload()->get('_token'))) {
-            $entityManager->remove($car);
-            $entityManager->flush();
-        }
+        $entityManager->remove($car);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('api_car_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse(['message' => 'Car deleted successfully'], Response::HTTP_OK);
     }
 }
